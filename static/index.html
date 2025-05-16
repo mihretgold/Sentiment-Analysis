@@ -80,6 +80,7 @@
             result.style.display = 'none';
 
             try {
+                console.log('Sending request with text:', text);
                 const response = await fetch('/api/v1/data', {
                     method: 'POST',
                     headers: {
@@ -93,10 +94,15 @@
                 });
 
                 const data = await response.json();
+                console.log('Received response:', data);
 
                 if (response.ok) {
-                    const sentiment = data.result[0];
+                    console.log('Response sentiment:', data.sentiment);
+                    const sentiment = data.sentiment;
+                    console.log('Sentiment object:', sentiment);
+                    
                     const score = parseFloat(sentiment.score) * 100; // Convert to percentage
+                    console.log('Calculated score:', score);
                     
                     // Display original result
                     originalResult.innerHTML = `
@@ -106,16 +112,18 @@
                     
                     // Determine sentiment category based on score
                     let category = '';
-                    if (score > 50) {
-                        category = 'Bad';
+                    if (score < 0) {
+                        category = 'negative';
                         result.className = 'result-box negative';
-                    } else if (score < 50) {
-                        category = 'Good';
+                    } else if (score > 0) {
+                        category = 'positive';
                         result.className = 'result-box positive';
                     } else {
-                        category = 'Neutral';
+                        category = 'neutral';
                         result.className = 'result-box neutral';
                     }
+                    
+                    console.log('Determined category:', category);
                     
                     // Display sentiment category
                     sentimentLabel.textContent = `Overall Sentiment: ${category}`;
@@ -123,9 +131,11 @@
                     // Show result
                     result.style.display = 'block';
                 } else {
+                    console.error('Error response:', data.error);
                     throw new Error(data.error || 'An error occurred');
                 }
             } catch (error) {
+                console.error('Caught error:', error);
                 originalResult.innerHTML = `<p class="text-danger">Error: ${error.message}</p>`;
                 result.className = 'result-box negative';
                 result.style.display = 'block';
