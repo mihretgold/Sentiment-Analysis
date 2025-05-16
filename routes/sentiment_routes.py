@@ -31,12 +31,12 @@ async def api_data():
     loop = asyncio.get_running_loop()
     sentiment_result = await loop.run_in_executor(None, sentiment_service.analyze_sentiment, data['data']['text'])
     
-    # Structure the response to match frontend expectations
+    # Structure the response as a single object
     response = {
-        'result': [{
+        'sentiment': {
             'score': sentiment_result['score'],
             'label': sentiment_result['label']
-        }]
+        }
     }
     
     logger.debug(f"Sending response: {response}")
