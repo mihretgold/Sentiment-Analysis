@@ -4,4 +4,5 @@ transformers==4.38.2
 torch==2.2.1
 python-dotenv==1.0.1
 numpy==1.26.4
-gunicorn==21.2.0 
+gunicorn==21.2.0
+vaderSentiment==3.3.2 
